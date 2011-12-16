@@ -1,0 +1,21 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          openstack-nova-network
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Stop:      0 1 6
+# Short-Description: Nova network server
+# Description:       Network server for Nova.
+### END INIT INFO
+
+# openstack-nova-network: Nova network server
+#
+# chkconfig: - 90 03
+# description: Network server for Nova.
+
+modprobe iptable_filter
+
+name="nova-network"
+
+. /etc/rc.d/init.d/openstack-nova-common.sh

@@ -1,0 +1,86 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          openstack-nova-objectstore
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Stop:      0 1 6
+# Short-Description: Nova objectstore server
+# Description:       Objectstore server for nova.
+### END INIT INFO
+
+# openstack-nova-objectstore: nova objectstore server
+#
+# chkconfig: - 90 03
+# description: Objectstore server for nova.
+
+. /etc/rc.d/init.d/functions
+
+name="objectstore"
+USER="nova"
+GROUP="nobody"
+FLAGFILE="/etc/nova/nova-$name.conf"
+PIDFILE="/var/run/nova/nova-$name.pid"
+
+[ -e "/etc/sysconfig/openstack-nova-$name" ] && . "/etc/sysconfig/openstack-nova-$name"
+
+uid="$(getent passwd $USER | cut -f3 -d:)"
+gid="$(getent passwd $GROUP | cut -f4 -d:)"
+DAEMON_OPTIONS="--flagfile=$FLAGFILE --uid=$uid --gid=$gid --pidfile=$PIDFILE"
+OPTIONS="${OPTIONS} $DAEMON_OPTIONS"
+
+lockfile="/var/lock/subsys/openstack-nova-objectstore"
+
+start() {
+    /usr/bin/nova-$name $OPTIONS start &>/dev/null
+    retval=$?
+    [ $retval -eq 0 ] && touch $lockfile
+    return $retval
+}
+
+stop() {
+    /usr/bin/nova-$name $OPTIONS stop &>/dev/null
+    retval=$?
+    [ $retval -eq 0 ] && rm -f $lockfile
+    return $retval
+}
+
+restart() {
+    stop
+    start
+}
+
+rh_status() {
+    status -p $PIDFILE "nova-$name"
+}
+
+rh_status_q() {
+    rh_status &> /dev/null
+}
+
+case "$1" in
+    start)
+        rh_status_q && exit 0
+        $1
+        ;;
+    stop)
+        rh_status_q || exit 0
+        $1
+        ;;
+    restart)
+        $1
+        ;;
+    reload)
+        ;;
+    status)
+        rh_status
+        ;;
+    condrestart|try-restart)
+        rh_status_q || exit 0
+        restart
+        ;;
+    *)
+        echo $"Usage: $0 {start|stop|status|restart|condrestart|try-restart}"
+        exit 2
+esac
+exit $?

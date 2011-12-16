@@ -1,0 +1,19 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          openstack-nova-compute
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Stop:      0 1 6
+# Short-Description: Nova compute server
+# Description:       Compute server for Nova.
+### END INIT INFO
+
+# openstack-nova-compute: Nova compute server
+#
+# chkconfig: - 90 03
+# description: Compute server for Nova.
+
+name="nova-compute"
+
+. /etc/rc.d/init.d/openstack-nova-common.sh

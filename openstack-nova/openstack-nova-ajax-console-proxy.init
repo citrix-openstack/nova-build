@@ -1,0 +1,19 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          openstack-nova-ajax-console-proxy
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Stop:      0 1 6
+# Short-Description: Nova ajax console proxy server
+# Description:       ajax console proxy server for Nova.
+### END INIT INFO
+
+# openstack-nova-ajax-console-proxy: Nova ajax console proxy server
+#
+# chkconfig: - 90 03
+# description: ajax console proxy server for Nova.
+
+name="nova-ajax-console-proxy"
+
+. /etc/rc.d/init.d/openstack-nova-common.sh

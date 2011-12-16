@@ -1,0 +1,19 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          openstack-nova-scheduler
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Stop:      0 1 6
+# Short-Description: Nova scheduling service
+# Description:       Scheduling service for Nova.
+### END INIT INFO
+
+# openstack-nova-scheduler: Nova scheduling service
+#
+# chkconfig: - 90 03
+# description: Scheduling service for Nova.
+
+name="nova-scheduler"
+
+. /etc/rc.d/init.d/openstack-nova-common.sh

@@ -1,0 +1,19 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          openstack-nova-api
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Stop:      0 1 6
+# Short-Description: Nova API server
+# Description:       API server for Nova.
+### END INIT INFO
+
+# openstack-nova-api: Nova API server
+#
+# chkconfig: - 90 03
+# description: API server for Nova.
+
+name="nova-api"
+
+. /etc/rc.d/init.d/openstack-nova-common.sh

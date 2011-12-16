@@ -1,0 +1,235 @@
+Summary: OpenStack Nova
+Name: openstack-nova
+Version: @NOVA_VERSION@
+Release: @BUILD_NUMBER@
+License: ASL 2.0
+Vendor: OpenStack, repackaged by Citrix Systems, Inc.
+Group: Applications/System
+URL: http://openstack.org/projects/compute/
+Source0: openstack-nova-%{version}-%{release}.tar.gz
+Source1: %{name}-api.conf
+Source2: %{name}-api.init
+Source3: %{name}-compute.conf
+Source4: %{name}-compute.init
+Source5: %{name}-dhcpbridge.conf
+Source6: %{name}.logrotate
+Source7: %{name}-manage.conf
+Source8: %{name}-network.conf
+Source9: %{name}-network.init
+Source10: %{name}-objectstore.conf
+Source11: %{name}-objectstore.init
+Source12: %{name}-scheduler.conf
+Source13: %{name}-scheduler.init
+Source14: %{name}-volume.conf
+Source15: %{name}-volume.init
+Source16: %{name}-common.sh
+Source17: %{name}-api-paste.ini
+Source18: %{name}-manage.logrotate
+Source21: README-%{name}-packaging
+Source22: %{name}-vncproxy.conf
+Source23: %{name}-vncproxy.init
+Source24: %{name}-ajax-console-proxy.conf
+Source25: %{name}-ajax-console-proxy.init
+BuildRoot: %{_tmppath}/%{name}
+BuildArch: noarch
+BuildRequires: python-gflags, python-distutils-extra, intltool, gettext
+Requires: daemonize, python-gflags, python-ZSI
+
+Requires(post): chkconfig
+Requires(preun): chkconfig
+
+%global _datarootdir /usr/share
+%global _tmpdir /tmp
+%global _sharedstatedir /var/lib
+%global python_sitelib /usr/lib/python2.6/site-packages
+
+%description
+
+%prep
+%setup -q -n openstack-nova-%{version}
+cp %{SOURCE21} .
+
+%build
+%{__python} setup.py build
+
+%install
+rm -rf %{buildroot}
+%{__python} setup.py install -O1 --root %{buildroot}
+
+# Setup directories
+install -d -m 755 %{buildroot}%{_sysconfdir}/nova
+install -d -m 755 %{buildroot}%{_sharedstatedir}/nova
+install -d -m 755 %{buildroot}%{_sharedstatedir}/nova/images
+install -d -m 755 %{buildroot}%{_sharedstatedir}/nova/instances
+install -d -m 755 %{buildroot}%{_sharedstatedir}/nova/keys
+install -d -m 755 %{buildroot}%{_sharedstatedir}/nova/networks
+install -d -m 755 %{buildroot}%{_sharedstatedir}/nova/tmp
+install -d -m 755 %{buildroot}%{_localstatedir}/log/nova
+install -d -m 755 %{buildroot}%{_tmpdir}/nova
+cp -rp nova/CA %{buildroot}%{_sharedstatedir}/nova
+
+# Install init files
+install -p -D -m 755 %{SOURCE2} %{buildroot}%{_initrddir}/%{name}-api
+install -p -D -m 755 %{SOURCE4} %{buildroot}%{_initrddir}/%{name}-compute
+install -p -D -m 755 %{SOURCE9} %{buildroot}%{_initrddir}/%{name}-network
+install -p -D -m 755 %{SOURCE11} %{buildroot}%{_initrddir}/%{name}-objectstore
+install -p -D -m 755 %{SOURCE13} %{buildroot}%{_initrddir}/%{name}-scheduler
+install -p -D -m 755 %{SOURCE15} %{buildroot}%{_initrddir}/%{name}-volume
+install -p -D -m 755 %{SOURCE23} %{buildroot}%{_initrddir}/%{name}-vncproxy
+install -p -D -m 755 %{SOURCE25} %{buildroot}%{_initrddir}/%{name}-ajax-console-proxy
+install -p -D -m 755 %{SOURCE16} %{buildroot}%{_initrddir}/%{name}-common.sh
+
+# Install logrotate
+install -p -D -m 644 %{SOURCE6} %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
+install -p -D -m 644 %{SOURCE18} %{buildroot}%{_sysconfdir}/logrotate.d/%{name}-manage
+
+# Install config files
+install -p -D -m 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/nova/nova-api.conf
+install -p -D -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/nova/nova-compute.conf
+install -p -D -m 644 %{SOURCE5} %{buildroot}%{_sysconfdir}/nova/nova-dhcpbridge.conf
+install -p -D -m 644 %{SOURCE7} %{buildroot}%{_sysconfdir}/nova/nova-manage.conf
+install -p -D -m 644 %{SOURCE8} %{buildroot}%{_sysconfdir}/nova/nova-network.conf
+install -p -D -m 644 %{SOURCE10} %{buildroot}%{_sysconfdir}/nova/nova-objectstore.conf
+install -p -D -m 644 %{SOURCE12} %{buildroot}%{_sysconfdir}/nova/nova-scheduler.conf
+install -p -D -m 644 %{SOURCE14} %{buildroot}%{_sysconfdir}/nova/nova-volume.conf
+install -p -D -m 644 %{SOURCE22} %{buildroot}%{_sysconfdir}/nova/nova-vncproxy.conf
+install -p -D -m 644 %{SOURCE24} %{buildroot}%{_sysconfdir}/nova/nova-ajax-console-proxy.conf
+install -p -D -m 644 %{SOURCE17} %{buildroot}%{_sysconfdir}/nova/api-paste.ini
+
+# Install pid directory
+install -d -m 755 %{buildroot}%{_localstatedir}/run/nova
+
+# Clean CA directory
+find %{buildroot}%{_sharedstatedir}/nova/CA -name .gitignore -delete
+find %{buildroot}%{_sharedstatedir}/nova/CA -name .placeholder -delete
+
+install -d -m 755 %{buildroot}%{_datarootdir}/nova
+ln -s %{python_sitelib}/nova/auth/novarc.template %{buildroot}%{_datarootdir}/nova
+ln -s %{python_sitelib}/nova/cloudpipe/client.ovpn.template %{buildroot}%{_datarootdir}/nova
+ln -s %{python_sitelib}/nova/virt/interfaces.template %{buildroot}%{_datarootdir}/nova
+
+mv %{buildroot}%{_datarootdir}/nova/euca-get-ajax-console %{buildroot}%{_bindir}
+
+# We're not packaging nova-instancemonitor, so just remove it.
+rm -f %{buildroot}%{_bindir}/nova-instancemonitor
+# Removing test runner
+rm -f %{buildroot}%{python_sitelib}/run_tests.py*
+# Removing manual for ajaxterm
+rm -f %{buildroot}%{_datarootdir}/man/man1/ajaxterm*
+# Removing translations 
+rm -f %{buildroot}%{_datarootdir}/locale/ast/LC_MESSAGES/nova.mo
+rm -f %{buildroot}%{_datarootdir}/locale/cs/LC_MESSAGES/nova.mo
+rm -f %{buildroot}%{_datarootdir}/locale/de/LC_MESSAGES/nova.mo
+rm -f %{buildroot}%{_datarootdir}/locale/da/LC_MESSAGES/nova.mo
+rm -f %{buildroot}%{_datarootdir}/locale/es/LC_MESSAGES/nova.mo
+rm -f %{buildroot}%{_datarootdir}/locale/it/LC_MESSAGES/nova.mo
+rm -f %{buildroot}%{_datarootdir}/locale/ja/LC_MESSAGES/nova.mo
+rm -f %{buildroot}%{_datarootdir}/locale/ru/LC_MESSAGES/nova.mo
+rm -f %{buildroot}%{_datarootdir}/locale/uk/LC_MESSAGES/nova.mo
+rm -f %{buildroot}%{_datarootdir}/locale/pt_BR/LC_MESSAGES/nova.mo
+rm -f %{buildroot}%{_datarootdir}/locale/zh_CN/LC_MESSAGES/nova.mo
+rm -f %{buildroot}%{_datarootdir}/locale/en_AU/LC_MESSAGES/nova.mo
+rm -f %{buildroot}%{_datarootdir}/locale/en_GB/LC_MESSAGES/nova.mo
+rm -f %{buildroot}%{_datarootdir}/locale/fr/LC_MESSAGES/nova.mo
+rm -f %{buildroot}%{_datarootdir}/locale/tl/LC_MESSAGES/nova.mo
+rm -f %{buildroot}%{_datarootdir}/locale/zh_TW/LC_MESSAGES/nova.mo
+
+%clean
+rm -rf %{buildroot}
+
+%pre
+getent group nova >/dev/null || groupadd -r nova
+getent passwd nova >/dev/null || \
+useradd -r -g nova -d %{_sharedstatedir}/nova -s /sbin/nologin \
+-c "OpenStack Nova Daemons" nova
+exit 0
+
+%post
+/sbin/chkconfig --add openstack-nova-api
+/sbin/chkconfig --add openstack-nova-compute
+/sbin/chkconfig --add openstack-nova-network
+/sbin/chkconfig --add openstack-nova-objectstore
+/sbin/chkconfig --add openstack-nova-scheduler
+/sbin/chkconfig --add openstack-nova-volume
+
+%preun
+if [ $1 = 0 ] ; then
+    /sbin/service openstack-nova-api stop >/dev/null 2>&1
+    /sbin/chkconfig --del openstack-nova-api
+
+    /sbin/service openstack-nova-compute stop >/dev/null 2>&1
+    /sbin/chkconfig --del openstack-nova-compute
+
+    /sbin/service openstack-nova-network stop >/dev/null 2>&1
+    /sbin/chkconfig --del openstack-nova-network
+
+    /sbin/service openstack-nova-objectstore stop >/dev/null 2>&1
+    /sbin/chkconfig --del openstack-nova-objectstore
+
+    /sbin/service openstack-nova-scheduler stop >/dev/null 2>&1
+    /sbin/chkconfig --del openstack-nova-scheduler
+
+    /sbin/service openstack-nova-volume stop >/dev/null 2>&1
+    /sbin/chkconfig --del openstack-nova-volume
+fi
+
+%files
+%defattr(-,root,root,-)
+%doc LICENSE
+%doc %{_datarootdir}/doc/nova/README
+%doc %{_datarootdir}/doc/nova/README-%{name}-packaging
+%config(noreplace) %{_sysconfdir}/logrotate.d/%{name}
+%config(noreplace) %{_sysconfdir}/logrotate.d/%{name}-manage
+%config(noreplace) %{_sysconfdir}/nova/nova-manage.conf
+%dir %{_sysconfdir}/nova
+%dir %attr(0755, nova, root) %{_localstatedir}/log/nova
+%dir %attr(0755, nova, root) %{_localstatedir}/run/nova
+%dir %attr(0755, nova, root) %{_tmpdir}/nova
+%{_bindir}/nova-manage
+%{_bindir}/nova-vsa
+%{_datarootdir}/nova
+%{python_sitelib}/nova
+%{python_sitelib}/nova-%{version}-*.egg-info
+%{_initrddir}/%{name}-common.sh
+%config(noreplace) %{_sysconfdir}/nova/nova-api.conf
+%config(noreplace) %{_sysconfdir}/nova/api-paste.ini
+%{_initrddir}/%{name}-api
+%{_bindir}/nova-api
+%config(noreplace) %{_sysconfdir}/nova/nova-compute.conf
+%{_bindir}/nova-compute
+%{_initrddir}/%{name}-compute
+%{_bindir}/nova-debug
+#%{_initrddir}/%{name}-debug
+%config(noreplace) %{_sysconfdir}/nova/nova-network.conf
+%config(noreplace) %{_sysconfdir}/nova/nova-dhcpbridge.conf
+%{_bindir}/nova-network
+%{_bindir}/nova-dhcpbridge
+%{_initrddir}/%{name}-network
+%config(noreplace) %{_sysconfdir}/nova/nova-objectstore.conf
+%{_bindir}/nova-objectstore
+%{_initrddir}/%{name}-objectstore
+%config(noreplace) %{_sysconfdir}/nova/nova-scheduler.conf
+%{_bindir}/nova-scheduler
+%{_initrddir}/%{name}-scheduler
+%config(noreplace) %{_sysconfdir}/nova/nova-volume.conf
+%{_bindir}/nova-volume
+%{_initrddir}/%{name}-volume
+%{_bindir}/nova-logspool
+%{_bindir}/nova-spoolsentry
+%{_bindir}/nova-ajax-console-proxy
+%{_initrddir}/%{name}-ajax-console-proxy
+%config(noreplace) %{_sysconfdir}/nova/nova-ajax-console-proxy.conf
+%{_bindir}/nova-vncproxy
+%{_initrddir}/%{name}-vncproxy
+%config(noreplace) %{_sysconfdir}/nova/nova-vncproxy.conf
+%{_bindir}/nova-console
+%{_bindir}/nova-direct-api
+%{_bindir}/stack
+%{_bindir}/instance-usage-audit
+%{_bindir}/nova-api-ec2
+%{_bindir}/nova-api-os
+%{_bindir}/clear_rabbit_queues
+%{_bindir}/euca-get-ajax-console
+
+%defattr(-,nova,nova,-)
+%{_sharedstatedir}/nova

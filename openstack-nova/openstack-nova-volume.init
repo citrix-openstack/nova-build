@@ -1,0 +1,19 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          openstack-nova-volume
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Stop:      0 1 6
+# Short-Description: Nova volume server
+# Description:       Volume server for Nova.
+### END INIT INFO
+
+# openstack-nova-volume: Nova volume server
+#
+# chkconfig: - 90 03
+# description: Volume server for Nova.
+
+name="nova-volume"
+
+. /etc/rc.d/init.d/openstack-nova-common.sh

@@ -1,0 +1,6 @@
+The openstack-nova packaging (init.d scripts, conf and logrotate files, and
+spec file) are taken from the proposed Fedora packaging by Silas Sewell.
+
+They were obtained from
+
+https://github.com/silas/rpms/tree/master/openstack-nova

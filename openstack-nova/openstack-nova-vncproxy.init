@@ -1,0 +1,19 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          openstack-nova-vncproxy
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Stop:      0 1 6
+# Short-Description: Nova VNC proxy server
+# Description:       VNC proxy server for Nova.
+### END INIT INFO
+
+# openstack-nova-vncproxy: Nova VNC proxy server
+#
+# chkconfig: - 90 03
+# description: VNC proxy server for Nova.
+
+name="nova-vncproxy"
+
+. /etc/rc.d/init.d/openstack-nova-common.sh
