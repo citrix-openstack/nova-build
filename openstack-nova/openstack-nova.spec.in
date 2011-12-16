@@ -124,6 +124,8 @@ rm -f %{buildroot}%{_datarootdir}/locale/da/LC_MESSAGES/nova.mo
 rm -f %{buildroot}%{_datarootdir}/locale/es/LC_MESSAGES/nova.mo
 rm -f %{buildroot}%{_datarootdir}/locale/it/LC_MESSAGES/nova.mo
 rm -f %{buildroot}%{_datarootdir}/locale/ja/LC_MESSAGES/nova.mo
+rm -f %{buildroot}%{_datarootdir}/locale/ko/LC_MESSAGES/nova.mo
+rm -f %{buildroot}%{_datarootdir}/locale/oc/LC_MESSAGES/nova.mo
 rm -f %{buildroot}%{_datarootdir}/locale/ru/LC_MESSAGES/nova.mo
 rm -f %{buildroot}%{_datarootdir}/locale/uk/LC_MESSAGES/nova.mo
 rm -f %{buildroot}%{_datarootdir}/locale/pt_BR/LC_MESSAGES/nova.mo
@@ -176,7 +178,7 @@ fi
 %files
 %defattr(-,root,root,-)
 %doc LICENSE
-%doc %{_datarootdir}/doc/nova/README
+%doc %{_datarootdir}/doc/nova/README.rst
 %doc %{_datarootdir}/doc/nova/README-%{name}-packaging
 %config(noreplace) %{_sysconfdir}/logrotate.d/%{name}
 %config(noreplace) %{_sysconfdir}/logrotate.d/%{name}-manage
@@ -185,7 +187,9 @@ fi
 %dir %attr(0755, nova, root) %{_localstatedir}/log/nova
 %dir %attr(0755, nova, root) %{_localstatedir}/run/nova
 %dir %attr(0755, nova, root) %{_tmpdir}/nova
+%{_bindir}/nova-all
 %{_bindir}/nova-manage
+%{_bindir}/nova-rootwrap
 %{_bindir}/nova-vsa
 %{_datarootdir}/nova
 %{python_sitelib}/nova
@@ -227,6 +231,7 @@ fi
 %{_bindir}/stack
 %{_bindir}/instance-usage-audit
 %{_bindir}/nova-api-ec2
+%{_bindir}/nova-api-metadata
 %{_bindir}/nova-api-os
 %{_bindir}/clear_rabbit_queues
 %{_bindir}/euca-get-ajax-console
