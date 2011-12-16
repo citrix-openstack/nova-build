@@ -3,24 +3,18 @@ IMPORT_BRANDING := yes
 ifdef B_BASE
 include $(B_BASE)/common.mk
 include $(B_BASE)/rpmbuild.mk
+REPO := /repos/nova-build
+NOVA_UPSTREAM := /repos/nova
+NOVACLIENT_UPSTREAM := /repos/python-novaclient
+NOVACLIENT_BUILD := /repos/python-novaclient-build
 else
 COMPONENT := nova
 include ../../mk/easy-config.mk
+REPO := .
+NOVA_UPSTREAM := ../nova
+NOVACLIENT_UPSTREAM := ../python-novaclient
+NOVACLIENT_BUILD := ../python-novaclient-build
 endif
-
-REPO := $(call hg_loc,$(COMPONENT))
-VPX_REPO := $(call hg_loc,os-vpx)
-
-
-LP_NOVA_BRANCH ?= lp:nova
-
-
-NOVA_UPSTREAM := $(shell test -d /repos/nova && \
-			 readlink -f /repos/nova || \
-			 readlink -f $(REPO)/upstream)
-NOVACLIENT_UPSTREAM := $(shell test -d /repos/python-novaclient && \
-			 readlink -f /repos/python-novaclient || \
-			 readlink -f $(REPO)/python-novaclient)
 
 
 NOVA_VERSION := $(shell sh -c "(cat $(NOVA_UPSTREAM)/nova/version.py; \
@@ -116,11 +110,11 @@ $(NOVA_TARBALL): $(shell find $(NOVA_UPSTREAM) -type f)
 
 $(NOVACLIENT_SRPM): $(NOVACLIENT_RPM)
 $(NOVACLIENT_RPM): $(NOVACLIENT_SPEC) $(NOVACLIENT_TARBALL) \
-	     $(shell find $(REPO)/python-novaclient-packages -type f)
-	cp -f $(REPO)/python-novaclient-packages/* $(MY_OBJ_DIR)/SOURCES
+	     $(shell find $(NOVACLIENT_BUILD) -type f)
+	cp -f $(NOVACLIENT_BUILD)/* $(MY_OBJ_DIR)/SOURCES
 	sh build-nova.sh $@ $< $(MY_OBJ_DIR)/SOURCES
 
-$(MY_OBJ_DIR)/%.spec: $(REPO)/python-novaclient-packages/%.spec.in
+$(MY_OBJ_DIR)/%.spec: $(NOVACLIENT_BUILD)/%.spec.in
 	mkdir -p $(dir $@)
 	$(call brand,$^) >$@
 	sed -e 's,@NOVACLIENT_VERSION@,$(NOVACLIENT_VERSION),g' -i $@
@@ -139,10 +133,6 @@ $(EPEL_REPOMD_XML): $(wildcard $(EPEL_RPM_DIR)/%)
 	$(call mkdir_clean,$(EPEL_YUM_DIR))
 	cp -s $(EPEL_RPM_DIR)/* $(EPEL_YUM_DIR)
 	createrepo $(EPEL_YUM_DIR)
-
-.PHONY: rebase
-rebase:
-	@sh $(VPX_REPO)/rebase.sh $(LP_NOVA_BRANCH) $(REPO)/upstream
 
 .PHONY: clean
 clean:
