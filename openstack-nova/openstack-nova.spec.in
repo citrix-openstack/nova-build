@@ -134,6 +134,7 @@ rm -f %{buildroot}%{_datarootdir}/locale/en_AU/LC_MESSAGES/nova.mo
 rm -f %{buildroot}%{_datarootdir}/locale/en_GB/LC_MESSAGES/nova.mo
 rm -f %{buildroot}%{_datarootdir}/locale/fr/LC_MESSAGES/nova.mo
 rm -f %{buildroot}%{_datarootdir}/locale/tl/LC_MESSAGES/nova.mo
+rm -f %{buildroot}%{_datarootdir}/locale/tr/LC_MESSAGES/nova.mo
 rm -f %{buildroot}%{_datarootdir}/locale/zh_TW/LC_MESSAGES/nova.mo
 
 %clean
