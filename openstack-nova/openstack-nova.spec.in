@@ -196,6 +196,7 @@ fi
 %{python_sitelib}/nova
 %{python_sitelib}/nova-%{version}-*.egg-info
 %{_initrddir}/%{name}-common.sh
+%config(noreplace) %{_sysconfdir}/nova/policy.json
 %config(noreplace) %{_sysconfdir}/nova/nova-api.conf
 %config(noreplace) %{_sysconfdir}/nova/api-paste.ini
 %{_initrddir}/%{name}-api
@@ -234,6 +235,8 @@ fi
 %{_bindir}/nova-api-ec2
 %{_bindir}/nova-api-metadata
 %{_bindir}/nova-api-os
+%{_bindir}/nova-api-os-compute
+%{_bindir}/nova-api-os-volume
 %{_bindir}/clear_rabbit_queues
 %{_bindir}/euca-get-ajax-console
 
