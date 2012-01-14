@@ -118,6 +118,7 @@ rm -f %{buildroot}%{python_sitelib}/run_tests.py*
 rm -f %{buildroot}%{_datarootdir}/man/man1/ajaxterm*
 # Removing translations 
 rm -f %{buildroot}%{_datarootdir}/locale/ast/LC_MESSAGES/nova.mo
+rm -f %{buildroot}%{_datarootdir}/locale/bs/LC_MESSAGES/nova.mo
 rm -f %{buildroot}%{_datarootdir}/locale/cs/LC_MESSAGES/nova.mo
 rm -f %{buildroot}%{_datarootdir}/locale/de/LC_MESSAGES/nova.mo
 rm -f %{buildroot}%{_datarootdir}/locale/da/LC_MESSAGES/nova.mo
