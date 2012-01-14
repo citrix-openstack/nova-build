@@ -234,7 +234,6 @@ fi
 %{_bindir}/instance-usage-audit
 %{_bindir}/nova-api-ec2
 %{_bindir}/nova-api-metadata
-%{_bindir}/nova-api-os
 %{_bindir}/nova-api-os-compute
 %{_bindir}/nova-api-os-volume
 %{_bindir}/clear_rabbit_queues
