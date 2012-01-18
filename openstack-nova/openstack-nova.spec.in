@@ -226,7 +226,6 @@ fi
 %{_bindir}/nova-ajax-console-proxy
 %{_initrddir}/%{name}-ajax-console-proxy
 %config(noreplace) %{_sysconfdir}/nova/nova-ajax-console-proxy.conf
-%{_bindir}/nova-vncproxy
 %{_initrddir}/%{name}-vncproxy
 %config(noreplace) %{_sysconfdir}/nova/nova-vncproxy.conf
 %{_bindir}/nova-console
