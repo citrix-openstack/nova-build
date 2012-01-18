@@ -230,6 +230,8 @@ fi
 %{_initrddir}/%{name}-vncproxy
 %config(noreplace) %{_sysconfdir}/nova/nova-vncproxy.conf
 %{_bindir}/nova-console
+%{_bindir}/nova-consoleauth
+%{_bindir}/nova-xvpvncproxy
 %{_bindir}/nova-direct-api
 %{_bindir}/stack
 %{_bindir}/instance-usage-audit
