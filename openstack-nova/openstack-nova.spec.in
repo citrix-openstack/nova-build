@@ -108,8 +108,6 @@ ln -s %{python_sitelib}/nova/auth/novarc.template %{buildroot}%{_datarootdir}/no
 ln -s %{python_sitelib}/nova/cloudpipe/client.ovpn.template %{buildroot}%{_datarootdir}/nova
 ln -s %{python_sitelib}/nova/virt/interfaces.template %{buildroot}%{_datarootdir}/nova
 
-mv %{buildroot}%{_datarootdir}/nova/euca-get-ajax-console %{buildroot}%{_bindir}
-
 # We're not packaging nova-instancemonitor, so just remove it.
 rm -f %{buildroot}%{_bindir}/nova-instancemonitor
 # Removing test runner
@@ -240,7 +238,6 @@ fi
 %{_bindir}/nova-api-os-compute
 %{_bindir}/nova-api-os-volume
 %{_bindir}/clear_rabbit_queues
-%{_bindir}/euca-get-ajax-console
 
 %defattr(-,nova,nova,-)
 %{_sharedstatedir}/nova
