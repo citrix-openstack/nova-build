@@ -76,7 +76,6 @@ install -p -D -m 755 %{SOURCE11} %{buildroot}%{_initrddir}/%{name}-objectstore
 install -p -D -m 755 %{SOURCE13} %{buildroot}%{_initrddir}/%{name}-scheduler
 install -p -D -m 755 %{SOURCE15} %{buildroot}%{_initrddir}/%{name}-volume
 install -p -D -m 755 %{SOURCE23} %{buildroot}%{_initrddir}/%{name}-vncproxy
-install -p -D -m 755 %{SOURCE25} %{buildroot}%{_initrddir}/%{name}-ajax-console-proxy
 install -p -D -m 755 %{SOURCE16} %{buildroot}%{_initrddir}/%{name}-common.sh
 
 # Install logrotate
