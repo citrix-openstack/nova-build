@@ -221,8 +221,6 @@ fi
 %{_initrddir}/%{name}-volume
 %{_bindir}/nova-logspool
 %{_bindir}/nova-spoolsentry
-%{_bindir}/nova-ajax-console-proxy
-%{_initrddir}/%{name}-ajax-console-proxy
 %config(noreplace) %{_sysconfdir}/nova/nova-ajax-console-proxy.conf
 %{_initrddir}/%{name}-vncproxy
 %config(noreplace) %{_sysconfdir}/nova/nova-vncproxy.conf
